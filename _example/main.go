@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/TopiSenpai/paginator"
+	"github.com/TopiSenpai/dgo-paginator"
 	"github.com/bwmarrin/discordgo"
 )
 
