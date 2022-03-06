@@ -1,4 +1,4 @@
-module github.com/DisgoOrg/utils/paginator
+module github.com/TopiSenpai/paginator
 
 go 1.17
 
