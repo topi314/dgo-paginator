@@ -59,7 +59,21 @@ type Paginator struct {
 	ID              string
 }
 
-func (m *Manager) Create(s *discordgo.Session, interaction *discordgo.Interaction, paginator *Paginator, acknowledged bool) error {
+func (m *Manager) CreateMessage(s *discordgo.Session, channelID string, paginator *Paginator) error {
+	if paginator.ID == "" {
+		paginator.ID = fmt.Sprintf("%s-%d", channelID, time.Now().UnixNano())
+	}
+
+	m.add(paginator)
+
+	_, err := s.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
+		Embeds:     []*discordgo.MessageEmbed{m.makeEmbed(paginator)},
+		Components: []discordgo.MessageComponent{m.createComponents(paginator)},
+	})
+	return err
+}
+
+func (m *Manager) CreateInteraction(s *discordgo.Session, interaction *discordgo.Interaction, paginator *Paginator, acknowledged bool) error {
 	if paginator.ID == "" {
 		paginator.ID = interaction.ID
 	}
@@ -72,9 +86,7 @@ func (m *Manager) Create(s *discordgo.Session, interaction *discordgo.Interactio
 	} else {
 		err = s.InteractionRespond(interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Embeds: []*discordgo.MessageEmbed{m.makeEmbed(paginator)},
-			},
+			Data: m.makeInteractionResponseData(paginator),
 		})
 	}
 	return err
@@ -93,6 +105,7 @@ func (m *Manager) remove(paginatorID string) {
 }
 
 func (m *Manager) OnInteractionCreate(s *discordgo.Session, interaction *discordgo.InteractionCreate) {
+	fmt.Printf("interaction: %+v\n", *interaction.Interaction)
 	if interaction.Type != discordgo.InteractionMessageComponent {
 		return
 	}
@@ -127,7 +140,12 @@ func (m *Manager) OnInteractionCreate(s *discordgo.Session, interaction *discord
 		paginator.CurrentPage--
 
 	case "stop":
-		_, _ = s.InteractionResponseEdit(s.State.User.ID, interaction.Interaction, &discordgo.WebhookEdit{Components: []discordgo.MessageComponent{}})
+		_ = s.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Components: []discordgo.MessageComponent{},
+			},
+		})
 		m.remove(paginatorID)
 		return
 
@@ -140,7 +158,13 @@ func (m *Manager) OnInteractionCreate(s *discordgo.Session, interaction *discord
 
 	paginator.Expiry = time.Now()
 
-	_, _ = s.InteractionResponseEdit(s.State.User.ID, interaction.Interaction, m.makeMessageUpdate(paginator))
+	if err := s.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseUpdateMessage,
+		Data: m.makeInteractionResponseData(paginator),
+	}); err != nil {
+		fmt.Printf("error editing interaction: %s\n", err)
+	}
+
 }
 
 func (m *Manager) makeEmbed(paginator *Paginator) *discordgo.MessageEmbed {
@@ -152,6 +176,13 @@ func (m *Manager) makeEmbed(paginator *Paginator) *discordgo.MessageEmbed {
 	}
 	paginator.PageFunc(paginator.CurrentPage, embed)
 	return embed
+}
+
+func (m *Manager) makeInteractionResponseData(paginator *Paginator) *discordgo.InteractionResponseData {
+	return &discordgo.InteractionResponseData{
+		Embeds:     []*discordgo.MessageEmbed{m.makeEmbed(paginator)},
+		Components: []discordgo.MessageComponent{m.createComponents(paginator)},
+	}
 }
 
 func (m *Manager) makeMessageUpdate(paginator *Paginator) *discordgo.WebhookEdit {
@@ -171,7 +202,7 @@ func (m *Manager) createComponents(paginator *Paginator) discordgo.MessageCompon
 			Label:    cfg.First.Label,
 			Style:    cfg.First.Style,
 			Disabled: paginator.CurrentPage == 0,
-			Emoji:    discordgo.ComponentEmoji{},
+			Emoji:    cfg.First.Emoji,
 			CustomID: m.formatCustomID(paginator, "first"),
 		})
 	}
@@ -180,7 +211,7 @@ func (m *Manager) createComponents(paginator *Paginator) discordgo.MessageCompon
 			Label:    cfg.Back.Label,
 			Style:    cfg.Back.Style,
 			Disabled: paginator.CurrentPage == 0,
-			Emoji:    discordgo.ComponentEmoji{},
+			Emoji:    cfg.Back.Emoji,
 			CustomID: m.formatCustomID(paginator, "back"),
 		})
 	}
@@ -189,7 +220,7 @@ func (m *Manager) createComponents(paginator *Paginator) discordgo.MessageCompon
 		actionRow.Components = append(actionRow.Components, discordgo.Button{
 			Label:    cfg.Stop.Label,
 			Style:    cfg.Stop.Style,
-			Emoji:    discordgo.ComponentEmoji{},
+			Emoji:    cfg.Stop.Emoji,
 			CustomID: m.formatCustomID(paginator, "stop"),
 		})
 	}
@@ -199,7 +230,7 @@ func (m *Manager) createComponents(paginator *Paginator) discordgo.MessageCompon
 			Label:    cfg.Next.Label,
 			Style:    cfg.Next.Style,
 			Disabled: paginator.CurrentPage == paginator.MaxPages-1,
-			Emoji:    discordgo.ComponentEmoji{},
+			Emoji:    cfg.Next.Emoji,
 			CustomID: m.formatCustomID(paginator, "next"),
 		})
 	}
@@ -208,7 +239,7 @@ func (m *Manager) createComponents(paginator *Paginator) discordgo.MessageCompon
 			Label:    cfg.Last.Label,
 			Style:    cfg.Last.Style,
 			Disabled: paginator.CurrentPage == paginator.MaxPages-1,
-			Emoji:    discordgo.ComponentEmoji{},
+			Emoji:    cfg.Last.Emoji,
 			CustomID: m.formatCustomID(paginator, "last"),
 		})
 	}
