@@ -105,7 +105,6 @@ func (m *Manager) remove(paginatorID string) {
 }
 
 func (m *Manager) OnInteractionCreate(s *discordgo.Session, interaction *discordgo.InteractionCreate) {
-	fmt.Printf("interaction: %+v\n", *interaction.Interaction)
 	if interaction.Type != discordgo.InteractionMessageComponent {
 		return
 	}
