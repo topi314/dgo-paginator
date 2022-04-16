@@ -16,7 +16,7 @@ dgo-paginator is a paginator working with buttons. It can be used with interacti
 go get github.com/TopiSenpai/dgo-paginator
 ```
 
-### Usage
+### Paginator Usage
 
 ```go
 // create new dgo session
@@ -68,10 +68,23 @@ signal.Notify(s, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 <-s
 ```
 
+### EventCollector Usage
+
+Create a new collector by passing it the `discordgo.Session` & a filter function.
+The filter function will be called for every event.
+If the filter function returns true, the event will be collected and passed through the channel.
+If the filter function returns false, the event will be ignored.
+If you are done collecting don't forget to close the collector.
+
+```go
+eventChannel, stopCollector := event_collector.NewEventCollector(ssession, func(s *discordgo.Session, e *discordgo.MessageCreate) bool {
+    return // filter your events here
+})
+```
 
 ## Examples
 
-You can find examples under [_example](https://github.com/TopiSenpai/dgo-paginator/blob/master/_example/main.go)
+You can find examples under [_examples](https://github.com/TopiSenpai/dgo-paginator/blob/master/_examples)
 
 ## Contributing
 
