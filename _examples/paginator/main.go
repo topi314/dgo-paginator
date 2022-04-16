@@ -23,9 +23,9 @@ func main() {
 		return
 	}
 	manager := paginator.NewManager()
-	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(manager.OnInteractionCreate)
 
+	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.ID == s.State.User.ID || m.Content != "!test" {
 			return
