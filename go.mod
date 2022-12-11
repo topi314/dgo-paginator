@@ -2,7 +2,7 @@ module github.com/TopiSenpai/dgo-paginator
 
 go 1.18
 
-require github.com/bwmarrin/discordgo v0.24.0
+require github.com/bwmarrin/discordgo v0.26.1
 
 require (
 	github.com/gorilla/websocket v1.5.0 // indirect

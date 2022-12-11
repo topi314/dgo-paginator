@@ -82,7 +82,7 @@ func (m *Manager) CreateInteraction(s *discordgo.Session, interaction *discordgo
 
 	var err error
 	if acknowledged {
-		_, err = s.InteractionResponseEdit(s.State.User.ID, interaction, m.makeMessageUpdate(paginator))
+		_, err = s.InteractionResponseEdit(interaction, m.makeMessageUpdate(paginator))
 	} else {
 		err = s.InteractionRespond(interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -125,7 +125,7 @@ func (m *Manager) OnInteractionCreate(s *discordgo.Session, interaction *discord
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
 				Content: m.Config.NotYourPaginatorMessage,
-				Flags:   uint64(discordgo.MessageFlagsEphemeral),
+				Flags:   discordgo.MessageFlagsEphemeral,
 			},
 		})
 		return
@@ -185,7 +185,7 @@ func (m *Manager) makeInteractionResponseData(paginator *Paginator) *discordgo.I
 }
 
 func (m *Manager) makeMessageUpdate(paginator *Paginator) *discordgo.WebhookEdit {
-	return &discordgo.WebhookEdit{Embeds: []*discordgo.MessageEmbed{m.makeEmbed(paginator)}, Components: []discordgo.MessageComponent{m.createComponents(paginator)}}
+	return &discordgo.WebhookEdit{Embeds: &[]*discordgo.MessageEmbed{m.makeEmbed(paginator)}, Components: &[]discordgo.MessageComponent{m.createComponents(paginator)}}
 }
 
 func (m *Manager) formatCustomID(paginator *Paginator, action string) string {
