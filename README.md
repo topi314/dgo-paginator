@@ -1,8 +1,8 @@
-[![Go Reference](https://pkg.go.dev/badge/github.com/TopiSenpai/dgo-paginator.svg)](https://pkg.go.dev/github.com/TopiSenpai/dgo-paginator)
-[![Go Report](https://goreportcard.com/badge/github.com/TopiSenpai/dgo-paginator)](https://goreportcard.com/report/github.com/TopiSenpai/dgo-paginator)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/TopiSenpai/dgo-paginator)](https://golang.org/doc/devel/release.html)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/TopiSenpai/dgo-paginator/blob/master/LICENSE)
-[![Version](https://img.shields.io/github/v/tag/TopiSenpai/dgo-paginator?label=release)](https://github.com/TopiSenpai/dgo-paginator/releases/latest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/TopiSenpai/dgo-paginator.svg)](https://pkg.go.dev/github.com/topi314/dgo-paginator)
+[![Go Report](https://goreportcard.com/badge/github.com/topi314/dgo-paginator)](https://goreportcard.com/report/github.com/topi314/dgo-paginator)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/topi314/dgo-paginator)](https://golang.org/doc/devel/release.html)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/github/v/tag/topi314/dgo-paginator?label=release)](https://github.com/topi314/dgo-paginator/releases/latest)
 
 # dgo-paginator
 
@@ -13,7 +13,7 @@ dgo-paginator is a paginator working with buttons. It can be used with interacti
 ### Installing
 
 ```sh
-go get github.com/TopiSenpai/dgo-paginator
+go get github.com/topi314/dgo-paginator
 ```
 
 ### Paginator Usage
@@ -84,7 +84,7 @@ eventChannel, stopCollector := event_collector.NewEventCollector(ssession, func(
 
 ## Examples
 
-You can find examples under [_examples](https://github.com/TopiSenpai/dgo-paginator/blob/master/_examples)
+You can find examples under [_examples](_examples)
 
 ## Contributing
 
@@ -92,6 +92,6 @@ Contributions are welcomed but for bigger changes please create a discussion.
 
 ## License
 
-Distributed under the [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/TopiSenpai/dgo-paginator/blob/master/LICENSE)
+Distributed under the [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 . See LICENSE for more information.
 

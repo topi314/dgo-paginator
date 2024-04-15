@@ -1,4 +1,4 @@
-module github.com/TopiSenpai/dgo-paginator
+module github.com/topi314/dgo-paginator
 
 go 1.18
 
