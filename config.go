@@ -7,31 +7,31 @@ import (
 var DefaultConfig = Config{
 	ButtonsConfig: ButtonsConfig{
 		First: &ComponentOptions{
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "⏮",
 			},
 			Style: discordgo.PrimaryButton,
 		},
 		Back: &ComponentOptions{
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "◀",
 			},
 			Style: discordgo.PrimaryButton,
 		},
 		Stop: &ComponentOptions{
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "🗑",
 			},
 			Style: discordgo.DangerButton,
 		},
 		Next: &ComponentOptions{
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "▶",
 			},
 			Style: discordgo.PrimaryButton,
 		},
 		Last: &ComponentOptions{
-			Emoji: discordgo.ComponentEmoji{
+			Emoji: &discordgo.ComponentEmoji{
 				Name: "⏩",
 			},
 			Style: discordgo.PrimaryButton,
@@ -58,7 +58,7 @@ type ButtonsConfig struct {
 }
 
 type ComponentOptions struct {
-	Emoji discordgo.ComponentEmoji
+	Emoji *discordgo.ComponentEmoji
 	Label string
 	Style discordgo.ButtonStyle
 }

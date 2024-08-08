@@ -29,7 +29,7 @@ type Manager struct {
 
 func (m *Manager) startCleanup() {
 	go func() {
-		ticker := time.NewTimer(30 * time.Second)
+		ticker := time.NewTicker(30 * time.Second)
 		defer ticker.Stop()
 		for range ticker.C {
 			m.cleanup()
@@ -185,7 +185,10 @@ func (m *Manager) makeInteractionResponseData(paginator *Paginator) *discordgo.I
 }
 
 func (m *Manager) makeMessageUpdate(paginator *Paginator) *discordgo.WebhookEdit {
-	return &discordgo.WebhookEdit{Embeds: &[]*discordgo.MessageEmbed{m.makeEmbed(paginator)}, Components: &[]discordgo.MessageComponent{m.createComponents(paginator)}}
+	return &discordgo.WebhookEdit{
+		Embeds:     &[]*discordgo.MessageEmbed{m.makeEmbed(paginator)},
+		Components: &[]discordgo.MessageComponent{m.createComponents(paginator)},
+	}
 }
 
 func (m *Manager) formatCustomID(paginator *Paginator, action string) string {
